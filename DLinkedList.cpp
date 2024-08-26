@@ -2,7 +2,6 @@
 
 using namespace std;
 
-//class DLinkedList;
 
 typedef string Elem;
 class DNode{
@@ -100,6 +99,19 @@ void DLinkedList::printList(){
     }
 }
 
+void listReverse(DLinkedList& L){
+    DLinkedList T;
+
+    while(!L.empty()){
+        string s= L.front(); L.removeFront();
+        T.addFront(s);
+    }
+    while(!T.empty()){
+        string s=T.front(); T.removeFront();
+        L.addBack(s);
+    }
+}
+
 int main(void)
 {
     DLinkedList d;
@@ -107,6 +119,7 @@ int main(void)
     d.addFront("hello");
     //d.addFront("me");
     d.addBack("philip");
+    listReverse(d);
     d.printList();
 
    return 0;
