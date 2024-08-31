@@ -162,6 +162,41 @@ void LinkedDeque::printlist(){
     D.printList();
 }
 
+
+class DequeStack{
+    public:
+        DequeStack();
+        int size() const;
+        bool empty() const;
+        const Elem& top() const;
+        void push(const Elem& e);
+        void pop();
+        void printlist();
+    private:
+        LinkedDeque D;
+
+};
+
+DequeStack::DequeStack(): D() {}
+int DequeStack::size() const{
+    return D.size();
+}
+bool DequeStack::empty() const{
+    return D.empty();
+}
+const Elem& DequeStack::top() const{
+    return D.front();
+}
+void DequeStack::push(const Elem& e){
+    D.insertFront(e);
+}
+void DequeStack::pop(){
+    D.removeFront();
+}
+void DequeStack::printlist(){
+    D.printlist();
+}
+
 int main(void){
     LinkedDeque D;
 
@@ -170,6 +205,11 @@ int main(void){
     D.insertBack("mom");
     D.insertFront("All");
     D.printlist();
+cout<<"+++++++++++++++++"<<endl;
+    DequeStack S;
+    S.push("hello");
+    S.push("philip");
+    S.printlist();
 
     return 0;
 }
