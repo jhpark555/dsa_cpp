@@ -48,5 +48,6 @@
         "map": "cpp",
         "xtree": "cpp",
         "queue": "cpp"
-    }
+    },
+    "svn.ignoreMissingSvnWarning": true
 }
