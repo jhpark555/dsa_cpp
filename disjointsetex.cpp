@@ -1,6 +1,7 @@
 // A C++ program to detect cycle in a graph using union by
 // rank and path compression
-#include <bits/stdc++.h>
+#include <iostream>
+
 using namespace std;
 
 // a structure to represent an edge in the graph
