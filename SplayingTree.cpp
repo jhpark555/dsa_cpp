@@ -297,6 +297,7 @@ void SplayTree<Comparable>::splay( const Comparable & x,
             t = t->left;
         }
         else if( t->element < x )
+        
         {
             if( t->right->element < x )
                 rotateWithRightChild( t );
