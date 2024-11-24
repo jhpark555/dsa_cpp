@@ -38,8 +38,9 @@ int minPathCost(int cost[M][N], int m, int n)
     else{
         int x = minPathCost(cost,m-1,n) ;
         int y = minPathCost(cost,m,n-1) ;
+        int z = minPathCost(cost,m-1,n-1);
         //return (getMin(x,y) + cost[m][n]);
-        MEM[m][n]= (getMin(x,y) + cost[m][n]);
+        MEM[m][n]= (getMin(getMin(x,y),z) + cost[m][n]);
     }
     return MEM[m][n];
 }
