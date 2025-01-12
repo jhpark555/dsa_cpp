@@ -142,15 +142,131 @@ void thread_inorder(Node *root){
     }
 
 }
+
+void MorrisInorder(Node *root){
+    Node *p=root, *tmp;
+
+    while(p!=0){
+        if(p->left==0){
+            std::cout<<p->el<<" ";
+            p=p->right;
+        }
+        else{
+            tmp =p->left;
+            while(tmp->right!=0 && tmp->right!=p)
+                tmp=tmp->right;
+            if(tmp->right==0){
+                tmp->right=p;
+                p=p->left;
+            }
+            else{
+                std::cout<<p->el<<" ";
+                tmp->right=0;
+                p=p->right;
+            }
+        }
+    }
+}
+
+void insert(Node **root,const int&el){
+    Node *p=*root, *prev=0;
+
+    while(p!=0){
+        prev=p;
+        if(el< p->el)
+            p=p->left;
+        else 
+            p=p->right;
+    }
+  
+    if(*root==0) *root= new Node(el);
+    else if(el< prev->el){
+        prev->left=new Node(el);
+    }
+    else {
+        prev->right=new Node(el);
+    }
+   
+}
+
 Node *create(int e)
 {
     Node *N= new Node(e);
     return N;
 }
 
+void deleteByCopying(Node *&node){
+    Node *prev,*tmp=node;
+    if(node->right ==0)
+        node=node->left;
+    else if(node->left==0)
+        node=node->right;
+    else{
+        tmp=node->left;
+        prev=node;
+        while(tmp->right!=0){
+            prev=tmp;
+            tmp=tmp->right;
+        }
+        node->el=tmp->el;
+        if(prev ==node)
+            prev->left=tmp->left;
+        else 
+            prev->right=tmp->left;
+    }
+    delete tmp;
+}
+
+
+void deleteByMerging(Node *&node){
+    Node *tmp=node;
+    if(node !=0){
+        if(!node->right)
+            node=node->left;
+        else if(node->left==0)
+            node=node->right;
+        else{
+            tmp=node->left;
+            while(tmp->right!=0)
+                tmp=tmp->right;
+            tmp->right=node->right;
+            tmp=node;
+            node=node->left;
+        }
+        delete tmp;
+    }
+}
+
+void findAndDeleteByMerging(Node *root,const int&el){
+    Node *node=root, *prev=0;
+    while(node!=0){
+        if(node->el ==el)   break;
+        prev=node;
+        if(el< node->el)
+            node=node->left;
+        else   
+            node=node->right;
+    }
+    if(node!=0 && node->el==el){
+        if(node ==root)
+           // deleteByMerging(root);
+           deleteByCopying(root);
+        else if(prev->left==node)
+          //  deleteByMerging(prev->left);
+          deleteByCopying(prev->left);
+        else 
+          //  deleteByMerging(prev->right);
+          deleteByCopying(prev->right);
+    }
+    else if(root!=0)
+        std::cout<<"element" << el << "is not in the tree\n";
+    else std::cout<<"the tree is empty\n";
+}
+
 
 int main()
 {
+#if 0
     Node *root= create(13);
     root->left=create(10);
     root->right=create(25);
@@ -159,13 +275,32 @@ int main()
     root->right->left=create(20);
     root->right->right=create(31);
     root->right->right->left=create(29);
+#else
+    Node *root=NULL;
+   
+     insert(&root,13);   
+     insert(&root,10);   
+     insert(&root,25);   
+     insert(&root,2);   
+     insert(&root,12);  
+     insert(&root,20);   
+     insert(&root,31);    
+     insert(&root,29);
+     insert(&root,33);
+     insert(&root,1);
+     insert(&root,4);
+     insert(&root,3);
+#endif
     
-    //bfs_levelorder(root);
+    bfs_levelorder(root);
     //bfs_preorder(root);
     //bfs_postorder(root);
-    bfs_inorder(root);
+    //bfs_inorder(root);
+    //MorrisInorder(root);
    // thread_inorder(root);
-    
+    findAndDeleteByMerging(root,10);
+    std::cout<<"\n";
+    bfs_levelorder(root);
 
     return 0;
 }
