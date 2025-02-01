@@ -54,14 +54,16 @@ int prim(graph *g, int start){
             if((distance[w] > p->weight ) && (!intree[w])) {
                 distance[w]= p->weight;
                 parent[w]=v;
+                printf("#%d %d \n",v,w);
             }
             p=p->next;
         }
 
         dist = MAXINT;
         for(i=1; i<=g->nvertices; i++){
-            if((!intree[i]) && (dist > distance[i])){
+            if((!intree[i]) && (dist > distance[i])){   //to find minimum edge weight
                 dist=distance[i];
+                printf("@%d \n",i);
                 v=i;
             }
         }
