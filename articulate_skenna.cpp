@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <queue>
+#include <stack>
+#include <iostream>
+#include <iterator>
 
 using namespace std;
 
@@ -10,6 +12,11 @@ using namespace std;
 #define WHITE (1)
 #define BLACK  (0)
 
+#define TREE (1)
+#define BACK (-1)
+#define FORWARD (2)
+#define CROSS (3)
+
 
 bool processed[MAXV+1];
 bool discovered[MAXV+1];
@@ -17,8 +24,10 @@ int parent[MAXV+1];
 bool finished=false;
 int reachable_ancestor[MAXV+1];
 int tree_out_degree[MAXV+1];
+int entry_time[MAXV+1];
 
-void find_path(int start, int end, int parent[]);
+std::stack<int> sorted;
+
 
 typedef struct graph graph;
 void insert_edge(graph *g,int x, int y, bool directed);
@@ -36,6 +45,12 @@ typedef struct graph{
     int nedges;
     int directed;
 }graph;
+
+
+
+void find_path(int start, int end, int parent[]);
+void dfs(graph *g, int v);
+
 
 void initialize_graph(graph *g, bool directed){
     int i;
@@ -102,20 +117,103 @@ void initialize_search(graph *g){
 }
 
 void process_vertex_early(int v) {
-   printf("processed vertex %d\n", v);
-}
-void process_edge(int x, int y) {
-   printf("processed edge (%d,%d)\n", x, y);
-   if(parent[y]!=x){
-    printf("Cycle from %d to %d \n",y,x);
-    find_path(y,x,parent);
-    finished = true;
-   }
-}
-void process_vertex_late(int v) {
-    
+   //printf("processed vertex %d\n", v);
+   reachable_ancestor[v]=v;
+
 }
 
+int edge_classification(int x, int y) {
+    if (parent[y] == x) {
+        return(TREE);
+    }
+    if (discovered[y] && !processed[y]) {
+        return(BACK);
+    }
+    if (processed[y] && (entry_time[y]>entry_time[x])) {
+        return(FORWARD);
+    }
+    if (processed[y] && (entry_time[y]<entry_time[x])) {
+        return(CROSS);
+    }
+    printf("Warning: self loop (%d,%d)\n", x, y);
+    return -1;
+}
+
+
+#if 0 //for articulation 
+void process_edge(int x, int y) {
+  int clas;  //edge class
+
+  clas= edge_classification(x,y);
+
+  if(clas ==TREE){
+    tree_out_degree[x]=tree_out_degree[x]+1;
+  }
+  if((clas ==BACK) &&(parent[x]!=y)){
+    if(entry_time[y] < entry_time[reachable_ancestor[x]]){
+        reachable_ancestor[x]=y;
+    }
+  }
+
+}
+
+
+void process_vertex_late(int v) {
+    bool root; /* is parent[v] the root of the DFS tree? */
+    int time_v; /* earliest reachable time for v */
+    int time_parent; /* earliest reachable time for parent[v] */
+    
+    if (parent[v] == -1) { /* test if v is the root */
+        if (tree_out_degree[v] > 1) {
+            printf("root articulation vertex: %d \n",v);
+        }
+        return;
+    }
+    root = (parent[parent[v]] == -1); /* is parent[v] the root? */
+        if (!root) {
+            if (reachable_ancestor[v] == parent[v]) {
+                printf("parent articulation vertex: %d \n", parent[v]);
+            }
+        if (reachable_ancestor[v] == v) {
+            printf("bridge articulation vertex: %d \n",parent[v]);
+            if (tree_out_degree[v] > 0) { /* is v is not a leaf? */
+                printf("bridge articulation vertex: %d \n", v);
+            }
+        }
+    }
+    time_v = entry_time[reachable_ancestor[v]];
+    time_parent = entry_time[reachable_ancestor[parent[v]]];
+    if (time_v < time_parent) {
+        reachable_ancestor[parent[v]] = reachable_ancestor[v];
+    }
+}
+#else    // for topological sort
+void process_vertex_late(int v){
+    sorted.push(v);
+}
+void process_edge(int x,int y){
+    int clas;
+
+    clas= edge_classification(x,y);
+
+    if(clas ==BACK) printf("Warning : directed cycle found, not a DAG\n");
+}
+#endif
+
+
+void topsort(graph *g){
+    int i;
+
+    for(i =1; i<= g->nvertices; i++ ){
+        if(!discovered[i]){
+            dfs(g,i);
+        }
+    }
+    while(!sorted.empty()){
+       std::cout<< sorted.top()<<" ";
+       sorted.pop();
+    }
+}
 void find_path(int start, int end, int parent[]){
     
     if((start==end) || (end==-1)) 
@@ -158,6 +256,25 @@ void dfs(graph *g, int v){
     processed[v]=true;
 }
 
+graph *transpose(graph *g){
+    graph *gt;
+    int x;
+    edgenode *p;
+
+    gt= new graph;
+
+    initialize_graph(gt,true);
+    gt->nvertices = g->nvertices;
+
+    for( x=1; x<=g->nvertices; x++){
+        p=g->edges[x];
+        while(p!=NULL){
+            insert_edge(gt,p->y,x,true);
+            p=p->next;
+        }
+    }
+    return gt;
+}
 
 int main()
 {
@@ -177,8 +294,12 @@ int main()
     insert_edge(&g,4,5,false);
     insert_edge(&g,5,6,false);
     
-    //print_graph(&g);
-    dfs(&g,1);
+    initialize_search(&g);
+    print_graph(&g);
+    //dfs(&g,1);
+    //topsort(&g);
+
+    print_graph(transpose(&g));   //reversed edges
     
     //for(int i=1; i<=8; i++)
     //  printf("%d ",parent[i]);
