@@ -85,6 +85,54 @@ int prim(graph *g, int start){
     return (weight);
 }
 
+int dijkstra(graph *g, int start){
+    int i;
+    edgenode *p;
+    bool intree[MAXV+1];
+    int distance[MAXV+1];
+    int v;      //current vertex
+    int w;      //next vertex
+    int dist;    //cheapest cost
+    int weight =0;
+
+    for(i=1; i<=g->nvertices; i++){
+        intree[i] = false;
+        distance[i]= MAXINT;
+        parent[i]=-1;
+    }
+
+    distance[start]=0;
+    v= start;
+
+    while(!intree[v]){
+        intree[v]=true;
+        if(v!=start){            
+            weight= weight + dist;
+           // printf("edge (%d %d) in tree \n", parent[v], v);
+        }
+        p=g->edges[v];
+        while( p!=NULL){
+            w=p->y;   //next vertex           
+            if (distance[w] > (distance[v] + p->weight))
+            {
+                distance[w] = distance[v] + p->weight;
+                parent[w]=v;   //parent of w is v
+                //printf("#%d)\n",distance[v]);
+            }            
+            p=p->next;
+        }
+        dist =MAXINT;
+        for(i=1; i<=g->nvertices; i++){
+            if((!intree[i]) && (dist > distance[i])){
+               dist=distance[i];
+               //printf("@%d %d \n",dist,i);
+               v=i;              // select minimum dist               
+            }
+        }
+    }
+    return (weight);
+
+}
 
 void union_find_init(union_find *s, int n){
     int i;
@@ -202,7 +250,7 @@ void print_graph(graph *g){
         printf("%d: ",i);
         p=g->edges[i];
         while(p !=NULL){
-            printf(" %d", p->y);
+            printf(" %d(%d)", p->y,p->weight);
             p=p->next;
         }
         printf("\n");
@@ -227,7 +275,18 @@ void insert_edge(graph *g,int x, int y, int weight, bool directed){
     }
 }
 
-
+void find_path(int start, int end, int parents[])
+{
+    if ((start == end) || (end == -1))
+    {
+        printf("\n@%d", start);
+    }
+    else
+    {
+        find_path(start, parents[end], parents);
+        printf(" %d", end);
+    }
+}
 
 int main()
 {
@@ -251,9 +310,13 @@ int main()
 
     // print_graph(&g);
 
-    int w = kruskal(&g); //prim(&g, 1);
+    int w = dijkstra(&g,1); //kruskal(&g); // prim(&g, 1);
     printf("w=%d \n",w);
 
+    for (int i = 1; i <= g.nvertices; i++)
+    {
+        find_path(1, i, parent);
+    }
     return (0);
     
 }
