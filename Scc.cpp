@@ -1,113 +1,111 @@
 #include <bits/stdc++.h>
+
+// https://www.topcoder.com/thrive/articles/kosarajus-algorithm-for-strongly-connected-components
+
+#define MAX_N 20001
+#define ll long long int
+
 using namespace std;
+int n,m;
 
-class GFG
-{
-public:
-    // dfs Function to reach destination
-    bool dfs(int curr, int des, vector<vector<int>> &adj,
-             vector<int> &vis)
-    {
-
-        // If curr node is destination return true
-        if (curr == des)
-        {
-            return true;
-        }
-        vis[curr] = 1;
-        for (auto x : adj[curr])
-        {
-            if (!vis[x])
-            {
-                if (dfs(x, des, adj, vis))
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    // To tell whether there is path from source to
-    // destination
-    bool isPath(int src, int des, vector<vector<int>> &adj)
-    {
-        vector<int> vis(adj.size() + 1, 0);
-        return dfs(src, des, adj, vis);
-    }
-
-    // Function to return all the strongly connected
-    // component of a graph.
-    vector<vector<int>> findSCC(int n,
-                                vector<vector<int>> &a)
-    {
-        // Stores all the strongly connected components.
-        vector<vector<int>> ans;
-
-        // Stores whether a vertex is a part of any Strongly
-        // Connected Component
-        vector<int> is_scc(n + 1, 0);
-
-        vector<vector<int>> adj(n + 1);
-
-        for (int i = 0; i < a.size(); i++)
-        {
-            adj[a[i][0]].push_back(a[i][1]);
-        }
-
-        // Traversing all the vertices
-        for (int i = 1; i <= n; i++)
-        {
-
-            if (!is_scc[i])
-            {
-
-                // If a vertex i is not a part of any SCC
-                // insert it into a new SCC list and check
-                // for other vertices whether they can be
-                // thr part of thidl ist.
-                vector<int> scc;
-                scc.push_back(i);
-
-                for (int j = i + 1; j <= n; j++)
-                {
-
-                    // If there is a path from vertex i to
-                    // vertex j and vice versa put vertex j
-                    // into the current SCC list.
-                    if (!is_scc[j] && isPath(i, j, adj) && isPath(j, i, adj))
-                    {
-                        is_scc[j] = 1;
-                        scc.push_back(j);
-                    }
-                }
-
-                // Insert the SCC containing vertex i into
-                // the final list.
-                ans.push_back(scc);
-            }
-        }
-        return ans;
-    }
+struct Node{
+    vector<int> adj;
+    vector<int> rev_adj;
 };
 
-// Driver Code Starts
+Node g[MAX_N];
+
+stack<int> S;
+bool visited[MAX_N];
+
+int component[MAX_N];
+vector<int> components[MAX_N];
+int numComponents;
+
+void dfs_1(int x){
+    visited[x]=true;
+    for(int i=0; i< g[x].adj.size(); i++){
+        if(!visited[g[x].adj[i]])
+            dfs_1(g[x].adj[i]);
+    }
+    S.push(x);
+    //printf("%d->",x);
+}
+
+void dfs_2(int x){
+    printf(" %d", x);
+    //component[x]=numComponents;
+    //components[numComponents].push_back(x);
+    visited[x]=true;
+    for(int i=0; i< g[x].rev_adj.size(); i++){
+        if (!visited[g[x].rev_adj[i]]) dfs_2(g[x].rev_adj[i]);
+    }
+}
+
+void Kosaraju(){
+    for(int i=0; i< n;i++)
+        if(!visited[i]) dfs_1(i);
+
+    for(int i=0;i<n ; i++)
+        visited[i]=false;
+
+    while(!S.empty()){
+        int v=S.top();  S.pop();
+        //printf("%d->", v);
+        if(!visited[v]){
+            printf("Component count %d: ",numComponents);
+            dfs_2(v);
+            numComponents++;
+            printf("\n");
+        }
+    }
+}
+
+void topologicalSort()
+{
+    for(int i=0;i <=8;i++)   visited[i]=false;
+
+    for(int x=0; x< 8; x++)
+      for(int i=0;i< g[x].adj.size(); i++)
+        if(!visited[i])
+            dfs_1(i);
+
+    for(int i=0;i <8; i++)
+    {
+        int v= S.top(); S.pop();
+        printf("%d->",v);
+    }
+}
 
 int main()
 {
+    n=8; m=10;
 
-    GFG obj;
-    int V = 5;
-    vector<vector<int>> edges{
-        {1, 3}, {1, 4}, {2, 1}, {3, 2}, {4, 5}};
-    vector<vector<int>> ans = obj.findSCC(V, edges);
-    cout << "Strongly Connected Components are:\n";
-    for (auto x : ans)
-    {
-        for (auto y : x)
-        {
-            cout << y << " ";
-        }
-        cout << "\n";
-    }
+    g[0].adj.push_back(1);
+    g[1].rev_adj.push_back(0);
+    g[1].adj.push_back(2);
+    g[2].rev_adj.push_back(1);
+    g[2].adj.push_back(0);
+    g[0].rev_adj.push_back(2);
+    g[2].adj.push_back(3);
+    g[3].rev_adj.push_back(2);
+    g[3].adj.push_back(4);
+    g[4].rev_adj.push_back(3);
+    g[4].adj.push_back(5);
+    g[5].rev_adj.push_back(4);
+    g[5].adj.push_back(6);
+    g[6].rev_adj.push_back(5);
+    g[6].adj.push_back(7);
+    g[7].rev_adj.push_back(6);
+    g[4].adj.push_back(7);
+    g[7].rev_adj.push_back(4);
+    g[6].adj.push_back(4);
+    g[4].rev_adj.push_back(6);
+
+    Kosaraju();
+
+    printf("Total number of components: %d \n",numComponents);
+
+    topologicalSort();
+     return 0;
 }
