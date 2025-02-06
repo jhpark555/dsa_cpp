@@ -41,15 +41,17 @@ int main()
     int V=5;
     //map<pair<int,int>,int> edges;
     vector<tuple<int,int,int>> edges;
-    addEdge(edges, 0, 1, 4);
-    addEdge(edges, 0, 2, 2);
-    addEdge(edges, 1, 3, 2);
-    addEdge(edges, 1, 4, 3);
-    addEdge(edges, 1, 2, 3);
-    addEdge(edges, 2, 1, 1);
-    addEdge(edges, 2, 4, 5);
-    addEdge(edges, 2, 3, 4);
-    addEdge(edges, 4, 3, -5);
+    addEdge(edges, 0, 1, 6);
+    addEdge(edges, 0, 2, 7);
+    addEdge(edges, 1, 3, 5);
+    addEdge(edges, 3, 1, -2);
+    addEdge(edges, 1, 2, 8);
+    addEdge(edges, 2, 4, 9);
+
+    addEdge(edges, 2, 3, -3);
+    addEdge(edges, 1, 4, -4);
+    addEdge(edges, 4, 0, 2);
+    addEdge(edges, 4, 3, 7);    //4 negative
 
     vector<int> dist(V,INT_MAX);
     int start=0;
