@@ -8,15 +8,15 @@ using namespace std;
 vector<int> dijkstra(vector<vector<pair<int,int>>> g, int start)
 {
     vector<int> dist(g.size(), INT_MAX);
-    //weight,vertex pair
+    // <weight, vertex> pair. First element of priority queue will be the minimum
     priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>pq;
-
-    pq.push({start,0});    //vertex, distance
+    //priority queue compares first element default so put the weight first.
+    pq.push({0,start});    //weight, vertex
     dist[start]=0;
 
     while(!pq.empty()){
-        int u=pq.top().first;
-        //printf("%d->",u);
+        int u=pq.top().second;
+        printf("%d->",u);
         pq.pop();
 
         for(int i=0; i< g[u].size(); i++){
@@ -25,7 +25,7 @@ vector<int> dijkstra(vector<vector<pair<int,int>>> g, int start)
 
             if(dist[v] > dist[u] + w){
                 dist[v]=dist[u]+w;
-                pq.push({v,dist[v]});
+                pq.push({dist[v],v});
             }
         }
     }

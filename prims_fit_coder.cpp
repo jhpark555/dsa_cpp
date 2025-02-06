@@ -15,7 +15,7 @@ vector<tuple<int,int,int>> prim(vector<vector<pair<int,int>>>& g,
     key[start]=0;
 
     priority_queue<pair<int,int>,vector<pair<int,int>>, greater<pair<int,int>>> pq;
-    pq.push({0,start});
+    pq.push({0,start});  //weight ,vertex
 
     vector<tuple<int,int,int>> result;
 
