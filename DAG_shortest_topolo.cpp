@@ -37,7 +37,7 @@ void SrtPath(int V,int s,list<int> &Top,vector<pair<int,int>>g[])
         {
             for(int i=0; i< g[u].size(); i++)
             {
-                cout << u<<"-> ";
+                //cout << u<<"-> ";
                 if (dist[g[u][i].first] >dist[u] + g[u][i].second) 
                     dist[g[u][i].first] =dist[u] + g[u][i].second;
             }
@@ -71,8 +71,9 @@ int main()
         if (!vis[i])
             topological_sort(g, vis, result, i);
 
-   // for (auto i : result)
-    //    cout << i << " ";
+    for (auto i : result)
+        cout << i << " ";
 
+    cout << "DAG shortest path: \n";
     SrtPath(V,1,result,g);
 }

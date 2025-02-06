@@ -11,7 +11,7 @@ vector<int> dijkstra(vector<vector<pair<int,int>>> g, int start)
     //weight,vertex pair
     priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>pq;
 
-    pq.push({start,0});    //vertex, weight
+    pq.push({start,0});    //vertex, distance
     dist[start]=0;
 
     while(!pq.empty()){
