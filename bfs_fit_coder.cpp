@@ -18,16 +18,25 @@ void bfs(vector<int> g[], int start)
     queue<int> q;
     q.push(start);
     visited[start]=true;
+    vector<int> d(V),p(V);
+    p[start]=-1;
 
     while(!q.empty()){
         int v=q.front();
         cout<<v <<"  ";
         q.pop();
 
-        for(int i=0; i< g[v].size(); i++){
-            if(!visited[g[v][i]])
-                q.push(g[v][i]);
-                visited[g[v][i]] = true;
+        //for(int i=0; i< g[v].size(); i++){
+        for(int u: g[v]){
+            //if(!visited[g[v][i]])
+            if(!visited[u]){
+                //q.push(g[v][i]);
+                q.push(u);
+                //visited[g[v][i]] = true;
+                visited[u]=true;
+                d[u]=d[v]+1;
+                p[u]=v;
+            }
         }
     }
 }

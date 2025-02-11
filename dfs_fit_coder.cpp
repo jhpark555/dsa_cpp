@@ -16,9 +16,12 @@ void dfs(vector<int> g[], vector<bool> &visited, int v)
 {
     visited[v]=true;
     cout<< v<<"  ";
-    for(int i=0; i< g[v].size(); i++)
-        if(!visited[g[v][i]])
-            dfs(g,visited,g[v][i]);
+    //for(int i=0; i< g[v].size(); i++)
+    for(auto u: g[v])
+        //if(!visited[g[v][i]])
+        if(!visited[u])
+            //dfs(g,visited,g[v][i]);
+            dfs(g,visited,u);
 }
 
 void dfs_iter(vector<int> g[],  int v)
@@ -45,6 +48,7 @@ int main()
 {
     vector<int> g[V];
 
+    
     addEdge(g, 0, 1);
     addEdge(g, 0, 3);
     addEdge(g, 1, 2);
@@ -53,6 +57,7 @@ int main()
     addEdge(g, 3, 4);
     addEdge(g, 4, 5);
     addEdge(g, 5, 6);
+    
 
     cout<<"DFS : \n";
     vector<bool> visited(V,false);

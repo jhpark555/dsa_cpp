@@ -22,6 +22,7 @@ int bfs(int source, int sink, vector<int>& parent, vector<vector<int>>&resG)
                 int min_cap=min(capacity, resG[u][av]);
                 if(av==sink)  
                     return min_cap;
+               // printf("%d,%d \n", u,av);
                 q.push({av,min_cap});
             }
         }
