@@ -12,9 +12,12 @@ void topological_sort(vector<int> g[], vector<bool>& visited, list<int>&result, 
 {
     visited[node]=true;
     //for(auto i=g[node].begin(); i!=g[node].end(); i++)
-    for(int i=0; i<g[node].size(); i++)
-        if(!visited[g[node][i]])
-            topological_sort(g,visited,result,g[node][i]);
+    //for(int i=0; i<g[node].size(); i++)
+    for(auto u: g[node])
+        //if(!visited[g[node][i]])
+        if(!visited[u])
+            //topological_sort(g,visited,result,g[node][i]);
+            topological_sort(g,visited,result,u);
     result.push_front(node);
 }
 int main()
