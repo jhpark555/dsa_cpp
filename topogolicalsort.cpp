@@ -1,9 +1,11 @@
 #include <iostream>
 #include <vector>
 #include <list>
+#include <queue>
 
 using namespace std;
 
+int V=5;
 void addEdge(vector<int> graph[], int u, int v)
 {
     graph[u].push_back(v);
@@ -20,9 +22,33 @@ void topological_sort(vector<int> g[], vector<bool>& visited, list<int>&result, 
             topological_sort(g,visited,result,u);
     result.push_front(node);
 }
+void topsort(vector<int> g[])
+{
+    int count[V];
+    queue<int> q;
+
+    for(int i=0;i<V;i++)  count[i]=0;
+    
+    for(int v=0; v< V; v++)
+        for(auto w: g[v])
+            count[w]++;
+    for(int v=0; v<V; v++)
+        if(count[v]==0)
+            q.push(v);
+    while(!q.empty()){
+        int v=q.front(); q.pop();
+        cout<<v<<" ";
+        for( auto w: g[v]){
+            count[w]--;
+            if(count[w]==0)
+                q.push(w);
+                
+        }
+    }
+}
 int main()
 {
-    int V=5;
+    
     vector<int> g[V];
     vector<bool> vis(V,false);
 
@@ -43,4 +69,6 @@ int main()
     for(auto i: result)
         cout<<i<<" ";
     
+    cout<<"Topological sort not recursive way\n";
+    topsort(g);
 }
