@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int V= 9;
+int V= 6;
 
 vector<int> dijkstra(vector<vector<pair<int, int>>> g, int start)
 {
@@ -76,6 +76,7 @@ void Dijkstra(vector<vector<pair<int,int>>> g,int *D,int s)
     }
 }
 
+
 void addEdge(vector<vector<pair<int, int>>> &g, int u, int v, int w)
 {
     g[u].push_back({v, w});
@@ -87,7 +88,7 @@ int main()
     // pair of node, weight
     vector<vector<pair<int, int>>> graph(V, vector<pair<int, int>>(V));
     int D[V];
-
+#if 0
     addEdge(graph, 0, 1, 4);
     addEdge(graph, 0, 7, 8);
     addEdge(graph, 1, 2, 8);
@@ -102,7 +103,17 @@ int main()
     addEdge(graph, 6, 7, 1);
     addEdge(graph, 6, 8, 6);
     addEdge(graph, 7, 8, 7);
+#else
+    addEdge(graph, 0, 2, 7);
+    addEdge(graph, 0, 4, 9);
+    addEdge(graph, 2, 1, 5);
+    addEdge(graph, 2, 3, 1);
+    addEdge(graph, 3, 5, 2);
+    addEdge(graph, 1, 5, 6);
+    addEdge(graph, 4, 5, 1);
+    addEdge(graph, 2, 5, 2);
 
+#endif
     vector<int> dist = dijkstra(graph, 0);
     // Print shortest distances stored in dist[]
     cout << "Vertex      Distance from Source" << endl;
