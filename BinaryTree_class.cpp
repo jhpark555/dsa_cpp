@@ -32,7 +32,7 @@ public:
     void insert(const Comparable &x)
     { insert(x,root);}
     void insert(Comparable &&x)
-    { insert(x,root); }
+    { insert(std::move(x),root); }
     void remove(const Comparable &x)
     { remove(x,root); }
 
@@ -67,14 +67,14 @@ private:
     }
 
     void insert(Comparable &&x,BinaryNode *&t )
-    {
+    {    
         if (t == nullptr)
             t = new BinaryNode{std::move(x), nullptr, nullptr};
         else if (x < t->element)
             insert(std::move(x), t->left);
         else if (x > t->element)
             insert(std::move(x), t->right);
-        else ;
+        else ;    
     }
     void remove(const Comparable &x, BinaryNode *&t)
     {
@@ -97,9 +97,11 @@ private:
             BinaryNode *oldNode =t;
             if( t->left!=nullptr)
                 t=t->left;
-            else if(t->right !=nullptr)
+            else 
                 t=t->right;
+                
             delete oldNode;
+           
         }
     }
     BinaryNode *findMin(BinaryNode *t) const
