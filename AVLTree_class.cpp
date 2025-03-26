@@ -6,7 +6,7 @@ template<typename Comparable>
 class BinarySearchTree
 {
 public:
-    BinarySearchTree() { root= nullptr; }
+    BinarySearchTree( ) { root= nullptr; }
     BinarySearchTree( const BinarySearchTree& rhs)
     { root = clone(rhs.root); }
     BinarySearchTree(BinarySearchTree &&rhs);
@@ -58,6 +58,7 @@ private:
     int height(AvlNode *t) const
     {
         return t==nullptr? -1: t->height;
+       //return t==nullptr? -1: 1+ max(height(t->left),height(t->right));
     }
 
     void insert(const Comparable &x, AvlNode * &t)
@@ -237,6 +238,7 @@ int main()
     s.insert(6);
     s.insert(8);
     s.insert(9);
+    s.insert(10);
     s.insert(13);
     s.insert(11);
     s.insert(12);
