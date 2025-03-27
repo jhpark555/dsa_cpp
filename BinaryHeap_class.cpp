@@ -21,7 +21,7 @@ public:
             array.resize(array.size()*2);
             
         //percolate up
-        int hole = ++currentSize;
+        int hole = currentSize++;
         Comparable copy =x;
 
         array[0]= std::move(copy);
@@ -41,9 +41,9 @@ public:
             array.resize(array.size() * 2);
 
         // percolate up
-        int hole = ++currentSize;
+        int hole = currentSize++;
         Comparable copy = std::move(x);
-        cout<<"insert "<<x <<" "<< hole<<" "<<currentSize;
+        //cout<<"insert "<<x <<" "<< hole<<" "<<currentSize;
         array[0] = std::move(copy);
         // for(; x< array[hole/2]; hole /=2) //go up to parent
         while (x < array[hole / 2])
@@ -58,7 +58,7 @@ public:
     {
         if(isEmpty())
             return ;
-        cout << "Min:" << array[1];
+        cout << "Min:" << array[1] <<"\n";;
         array[1]=std::move(array[currentSize-1]);   // last one -> first one
         percolateDown(1);
         
@@ -105,7 +105,8 @@ int main()
 {
     vector<int> v={-1,13, 21, 16, 24, 31, 19, 68, 65, 26, 32};
     BinaryHeap h(v);
-
+ 
+    h.insert(14);
     h.deleteMin();
     h.deleteMin();
     h.deleteMin();
