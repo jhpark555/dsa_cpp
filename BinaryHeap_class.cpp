@@ -8,8 +8,13 @@ class BinaryHeap
 {
 public:
     explicit BinaryHeap(int capacity = 1): currentSize{capacity} {  }
-    explicit BinaryHeap( const vector<Comparable>& items) 
-     { array=items;  currentSize=array.size();  }
+    explicit BinaryHeap(const vector<Comparable> &items) : array(items.size() + 10),
+     currentSize (items.size())
+    {   
+       for(int i =0; i< items.size(); i++)
+          array[i+1]= items[i];
+          buildHeap();
+    }
 
     bool isEmpty() const
     { return currentSize==0; }
@@ -80,7 +85,11 @@ private:
     int currentSize;
     vector<Comparable> array;
 
-    void buildHeap();
+    void buildHeap()
+    {
+        for(int i=currentSize/2; i>0 ; i--)
+            percolateDown(i);
+    }
     void percolateDown(int hole)
     {
         int child;
@@ -103,10 +112,10 @@ private:
 
 int main()
 {
-    vector<int> v={-1,13, 21, 16, 24, 31, 19, 68, 65, 26, 32};
+    vector<int> v={13, 21, 16, 24, 31, 19, 68, 65, 26, 32};
     BinaryHeap h(v);
  
-    h.insert(14);
+    h.insert(18);
     h.deleteMin();
     h.deleteMin();
     h.deleteMin();
