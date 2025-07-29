@@ -83,20 +83,31 @@ int main(int argc, char *argv[])
 
     int arr[]={10,30,3,5,8,91,22,36,89,95,54,28,67,1};
     int size= sizeof(arr)/sizeof(arr[0]);
-    int heap[size];
+    int heap[size+1];
     int num_heap=0;
+    int ret;
 
     for(int i=0 ; i< size ;i ++)
         max_heap_insert(heap,&num_heap,arr[i]);
     
-    int ret = max_heap_extract(heap,&num_heap);
-    printf("Max element= %d \n",ret);
+    
+    for(int i=0; i< size ; i++)
+        arr[i]=max_heap_extract(heap,&num_heap);
+
+    for(int i=0; i< size ;i++)
+       cout<< arr[i]<< " ";
+
+    cout<<"\n";
 
     num_heap=0;
 
     for(int i=0 ; i< size ;i ++)
         min_heap_insert(heap,&num_heap,arr[i]);
     
-     ret = min_heap_extract(heap,&num_heap);
-    printf("Min element= %d \n",ret);
+    
+    for(int i=0; i< size ; i++)
+        arr[i]=min_heap_extract(heap,&num_heap);
+
+    for(int i=0; i< size ;i++)
+       cout<< arr[i]<< " ";
 }
